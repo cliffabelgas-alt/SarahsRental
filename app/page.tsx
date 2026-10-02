@@ -50,7 +50,7 @@ export default function Home() {
         <div className="wrap hero">
           <div>
             <h2>Visit the shop</h2>
-            <p className="muted">Address, opening hours and contact details go here. Walk-ins welcome; fittings by appointment.</p>
+            <p className="muted">Purok-5, JP Luarel Sorsogon, opening hours 8:00 AM to 8:00 PM and contact details go here. Walk-ins welcome; fittings by appointment.</p>
           </div>
           <div className="actions"><Link className="btn" href="/inquiry">Book a fitting</Link></div>
         </div>
