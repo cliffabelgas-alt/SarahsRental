@@ -1,34 +1,44 @@
 'use client';
-import { FormEvent } from 'react';
-import { useRouter } from 'next/navigation';
-import { useStore } from '@/lib/store';
+import { FormEvent, useEffect, useState } from 'react';
+import { supabase } from '@/lib/supabase';
+import type { Gown } from '@/lib/types';
 
 export default function Inquiry() {
-  const { gowns, addRental } = useStore();
-  const router = useRouter();
+  const [gowns, setGowns] = useState<Gown[]>([]);
+  const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
 
-  function onSubmit(e: FormEvent<HTMLFormElement>) {
+  useEffect(() => {
+    supabase.from('gowns').select('*').order('code').then(({ data }) => setGowns((data ?? []) as Gown[]));
+  }, []);
+
+  async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const f = new FormData(e.currentTarget);
-    addRental({ customer: String(f.get('customer')), phone: String(f.get('phone')), eventDate: String(f.get('eventDate')), gownId: String(f.get('gownId')) });
-    router.push('/rentals');
+    const form = e.currentTarget;
+    const f = new FormData(form);
+    const { error } = await supabase.rpc('submit_inquiry', {
+      p_name: String(f.get('customer')), p_phone: String(f.get('phone')),
+      p_event_date: String(f.get('eventDate')), p_gown_id: String(f.get('gownId')),
+    });
+    if (error) setMsg({ ok: false, text: 'Sorry, we could not send that. Please check your details and try again.' });
+    else { setMsg({ ok: true, text: 'Thank you! We received your inquiry and will contact you soon.' }); form.reset(); }
   }
 
   return (
     <div className="wrap">
-      <h1>Customer inquiry</h1>
-      <p className="muted">Record the customer and the gown they asked about. It starts a rental you can move through fitting, payment and return.</p>
+      <h1>Ask about a gown</h1>
+      <p className="muted">Tell us the gown and your event date. We will confirm availability and set up a fitting.</p>
       <form className="f" onSubmit={onSubmit}>
-        <label>Customer name<input name="customer" required /></label>
-        <label>Phone<input name="phone" type="tel" required /></label>
+        <label>Your name<input name="customer" maxLength={100} required /></label>
+        <label>Phone<input name="phone" type="tel" minLength={5} maxLength={30} required /></label>
         <label>Event date<input name="eventDate" type="date" required /></label>
         <label>Gown
           <select name="gownId" required>
-            {gowns.map((g) => <option key={g.id} value={g.id}>{g.code} {g.name} ({g.status})</option>)}
+            {gowns.map((g) => <option key={g.id} value={g.id}>{g.name} (size {g.size})</option>)}
           </select>
         </label>
-        <button className="btn">Save inquiry</button>
+        <button className="btn">Send inquiry</button>
       </form>
+      {msg && <p role="status" className={msg.ok ? 'ok' : 'err'}>{msg.text}</p>}
     </div>
   );
 }
