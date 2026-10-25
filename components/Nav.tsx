@@ -5,9 +5,9 @@ export default function Nav() {
     <header className="nav">
       <Link href="/" className="brand">Sarah&rsquo;s Gown Rental</Link>
       <nav>
-        <Link href="/inventory">Inventory</Link>
+        <Link href="/#collection">Collection</Link>
         <Link href="/inquiry">Inquiry</Link>
-        <Link href="/rentals">Rentals</Link>
+        <Link href="/admin">Admin</Link>
       </nav>
     </header>
   );

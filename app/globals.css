@@ -32,3 +32,10 @@ table { width:100%; border-collapse:collapse; background:var(--white); } th,td {
 .rental { margin-bottom:1rem; } .row { display:flex; gap:1rem; align-items:end; flex-wrap:wrap; } .muted { color:#6c5c68; font-size:.9rem; }
 @media (max-width:760px) { .hero { grid-template-columns:1fr; } }
 @media (prefers-reduced-motion:reduce) { * { transition:none !important; } }
+.admin-nav { display:flex; gap:1.2rem; align-items:center; flex-wrap:wrap; padding:.7rem clamp(1rem,5vw,4rem); background:var(--mist); }
+.admin-nav a { text-decoration:none; } .admin-nav a:hover { color:var(--rose); } .admin-nav .btn { margin-left:auto; padding:.3rem 1rem; }
+.gimg { width:100%; aspect-ratio:3/4; object-fit:cover; display:block; margin-bottom:.8rem; }
+.thumb { width:56px; height:72px; object-fit:cover; display:block; }
+.stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1rem; margin-bottom:2rem; }
+.stat { background:var(--white); border:1px solid var(--mist); padding:1rem; } .stat b { display:block; font:400 2rem Georgia,serif; color:var(--rose); }
+.err { color:#a02020; } .ok { color:var(--sage); }
